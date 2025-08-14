@@ -1,7 +1,7 @@
 # Function to plot the comparative team strength 
 
 library(tidyr)
-
+library(dplyr)
 Strength_Comparison_chart <- function (team_names,full_results)
 {
   plot_data <- as.data.frame(t(full_results$history.means))
@@ -9,8 +9,6 @@ Strength_Comparison_chart <- function (team_names,full_results)
   plot_data$Time <- 1:nrow(plot_data)
   
   highlight_teams <- team_names 
-  
-  
   plot_data_long <- plot_data %>%
     pivot_longer(
       cols = -Time,
