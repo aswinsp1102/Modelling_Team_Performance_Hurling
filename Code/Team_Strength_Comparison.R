@@ -1,5 +1,7 @@
 # Function to plot the comparative team strength 
 
+library(tidyr)
+
 Strength_Comparison_chart <- function (team_names,full_results)
 {
   plot_data <- as.data.frame(t(full_results$history.means))

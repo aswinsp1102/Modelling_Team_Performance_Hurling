@@ -1,6 +1,6 @@
 # Data Preprocessing
 
-df <- as.data.frame(read.csv("https://raw.githubusercontent.com/aswinsp1102/DataAnalyticsDatasets/refs/heads/main/Hurling_ELO_Ratings.csv"))
+df <- as.data.frame(read.csv("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Data/Hurling_ELO_Ratings.csv"))
 head(df)
 str(df)
 df$Date <- as.Date(df$Date , format = '%d-%m-%Y')
@@ -36,8 +36,8 @@ Y
 
 #------------------------------------------------------------------------------
 
-source("KF_fit.R")
-source("KF_parest.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Fit_Baseline.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Parest_Baseline.R")
 
 # Baseline Model run: with all initial parameters at 0
 init_baseline = c(0,0,0,0)
@@ -115,12 +115,12 @@ full_results <- KFfit(
 
 
 # Individual Team Strength plotting
-source("Plotting_Function.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Plotting_Function.R")
 Team_Strength_Plot(team_indices[['Cork']],full_results,cov_info_df)
 Team_Strength_Plot(team_indices[['Limerick']],full_results,cov_info_df)
 Team_Strength_Plot(team_indices[['Tipperary']],full_results,cov_info_df)
 
-source("Strength_Comparison_chart.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Comparison.R")
 team_names_for_comparison <- c("Cork", "Limerick","Tipperary") 
 Strength_Comparison_chart(team_names_for_comparison,full_results)
 
