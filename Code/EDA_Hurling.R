@@ -10,7 +10,7 @@ df <- na.omit(df, cols = columns_to_check)
 row.names(df) <- NULL
 df
 
-# Analysing no of unique teams played over the period of 2009-2024
+# Analyzing no of unique teams played over the period of 2009-2024
 
 print(sort(unique(df$Team.1)))
 print(sort(unique(df$Team.2)))
@@ -20,6 +20,12 @@ m <- length(unique(df$Team.1))
 unique_teams <- sort(unique(df$Team.1))
 team_indices <- setNames(seq_along(unique_teams), unique_teams)
 team_indices
+
+# Grades of the leagues
+df$Grade
+as.data.frame(df %>% group_by(Grade) %>%
+  summarise(Matches_Played = n()))
+
 
 # Date , time between the seasons and number of matches played over the seasons
 match_counts <- df %>%
@@ -97,8 +103,8 @@ home_matches_top15 <- home_matches %>%
 
 
 barplot(
-  height = team_total_home$Total_Home_Matches[1:15],
-  names.arg = team_total_home$Home[1:15],
+  height = team_total_home$Total_Home_Matches,
+  names.arg = team_total_home$Home,
   xlab = "Team",
   ylab = "Total Home Matches",
   main = "Total Home Matches by Team",
@@ -124,3 +130,93 @@ df[597,]
 length(which(Y < 0)) / length(Y)
 length(which(Y > 0)) / length(Y)
 length(which(Y == 0)) / length(Y)
+
+
+# Combined team wise statistics on grades they have played , 
+# number of matches in total , number of home matches, number of wins,
+# win percentage, number of wins % in home matches 
+
+team_indices
+home_stat <- home_matches %>%
+  group_by(Home) %>%
+  summarise(Total_Home_Matches = sum(Home_Matches))
+total_match_stat <- df %>% 
+  pivot_longer(
+    cols = c(Team.1, Team.2),
+    names_to = "Home_Away",
+    values_to = "Team"
+  ) %>%
+  group_by(Team) %>%
+  summarise(Total_Matches = n())
+team_stats_combined <- as.data.frame(cbind(seq(1:37),
+                                           names(team_indices),
+                                           total_match_stat$Total_Matches,
+                                           home_stat$Total_Home_Matches,
+                                           0,0,0,0,0,0,0,0,0,0))
+colnames(team_stats_combined) <- c("team_index","team_name",
+                                   "total_matches_played",
+                                   "total_home_matches",
+                                   "total_wins",
+                                   "wins_at_home",
+                                   "total_win_percent",
+                                   "win_percent_at_home",
+                                   "All-Ireland",
+                                   "League",
+                                   "Provincial","Qualifier",
+                                   "Secondary","Ulster")
+team_stats_combined
+for (i  in 1:nrow(df)){
+  if(df$Sc_1[i] > df$Sc_2[i]){
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$total_wins <-
+      as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$total_wins) + 1
+    if(df$Home[i] == 'Y'){
+      team_stats_combined[team_indices[[df$Team.1[i]]],]$wins_at_home <-
+        as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$wins_at_home) + 1
+    }
+  }
+  if(df$Sc_1[i] < df$Sc_2[i]){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$total_wins <-
+      as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$total_wins) + 1
+  }
+  if(df$Grade[i] == "All-Ireland"){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$`All-Ireland` <- as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$`All-Ireland`) + 1
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$`All-Ireland` <- as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$`All-Ireland`) + 1
+  }
+  if(df$Grade[i] == "League"){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$League <- as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$League) + 1
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$League <- as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$League) + 1
+  }
+  if(df$Grade[i] == "Provincial"){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$Provincial <- as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$Provincial) + 1
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$Provincial <- as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$Provincial) + 1
+  }
+  if(df$Grade[i] == "Secondary"){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$Secondary <- as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$Secondary) + 1
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$Secondary <- as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$Secondary) + 1
+  }
+  if(df$Grade[i] == "Ulster"){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$Ulster <- as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$Ulster) + 1
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$Ulster <- as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$Ulster) + 1
+  }
+  if(df$Grade[i] == "Qualifier"){
+    team_stats_combined[team_indices[[df$Team.2[i]]],]$Qualifier <- as.numeric(team_stats_combined[team_indices[[df$Team.2[i]]],]$Qualifier) + 1
+    team_stats_combined[team_indices[[df$Team.1[i]]],]$Qualifier <- as.numeric(team_stats_combined[team_indices[[df$Team.1[i]]],]$Qualifier) + 1
+  }
+}
+  
+team_stats_combined$wins_away <- as.numeric(team_stats_combined$total_wins) -
+                                  as.numeric(team_stats_combined$wins_at_home)
+
+
+team_stats_combined$total_win_percent <- round((as.numeric(team_stats_combined$total_wins) /
+                                          as.numeric(team_stats_combined$total_matches_played))  * 100,1)
+
+
+team_stats_combined$win_percent_at_home <- round((as.numeric(team_stats_combined$wins_at_home) /
+                                                  as.numeric(team_stats_combined$total_home_matches))  * 100,1)
+
+team_stats_combined$win_percent_away <- round((as.numeric(team_stats_combined$wins_away) /
+                                                 (as.numeric(team_stats_combined$total_matches_played) - 
+                                                 as.numeric(team_stats_combined$total_home_matches)))  * 100,1)
+team_stats_combined
+
