@@ -220,3 +220,30 @@ team_stats_combined$win_percent_away <- round((as.numeric(team_stats_combined$wi
                                                  as.numeric(team_stats_combined$total_home_matches)))  * 100,1)
 team_stats_combined
 
+team_grade_match_info <- as.data.frame(cbind(team_stats_combined$team_name , 
+                          team_stats_combined$total_matches_played,
+                          team_stats_combined$`All-Ireland`,
+                          team_stats_combined$League,
+                          team_stats_combined$Provincial,
+                          team_stats_combined$Qualifier,
+                          team_stats_combined$Secondary,
+                          team_stats_combined$Ulster))
+colnames(team_grade_match_info) <- c("Team","Total Match","All-Ireland",
+                                     "League",
+                                     "Provincial","Qualifier",
+                                     "Secondary","Ulster")
+team_grade_match_info                          
+
+team_win_stats <- as.data.frame(cbind(team_stats_combined$team_name , 
+                                      team_stats_combined$total_matches_played,
+                                      team_stats_combined$total_home_matches,
+                                      team_stats_combined$total_wins,
+                                      team_stats_combined$wins_at_home,
+                                      team_stats_combined$total_win_percent,
+                                      team_stats_combined$win_percent_at_home,
+                                      team_stats_combined$win_percent_away))
+colnames(team_win_stats) <- c("Team","Total Match","Total Home Matches",
+                                     "Total Wins",
+                                     "Home Wins","Total Win(%)",
+                                     "Home Win(%)","Away Win(%)")
+team_win_stats
