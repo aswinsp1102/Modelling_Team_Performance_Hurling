@@ -66,64 +66,66 @@ data.frame(
   CI_upper = results_baseline$par + 1.96 * std_errors
 )
 AIC_baseline <- 2 * results_baseline$value + 2 * 4
+AIC_baseline
 eigen(results_baseline$hessian)$values
 
 
 #----------------------------------------------------------------------------
 
 # Run 2: Optimized initial values
-init_optimized = c(0,2,0,2.5)
-results_optimized_baseline <- KFparest(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init_optimized)
-results_optimized_baseline
-round(results_optimized_baseline$hessian,5)
-inv_hessian_results <- solve(results_optimized_baseline$hessian)
+init = results$par
+# init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
+results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
+results_final
+round(results_final$hessian,5)
+inv_hessian_results <- solve(results_final$hessian)
 inv_hessian_results
-eigen(solve(results_optimized_baseline$hessian))
+eigen(solve(results_final$hessian))
 # print("Confidence Interval of the estimates :")
 # for (i in 1:4){
 #   print(paste(results_optimized_baseline$par[i] , " : " , (results_optimized_baseline$par[i] - (1.96 * inv_hessian_results[i,i])) ,  " to " , (results_optimized_baseline$par[i] + (1.96 * inv_hessian_results[i,i]))))
 # }
 std_errors <- sqrt(diag(inv_hessian_results))
-t_stats <- results_optimized_baseline$par / std_errors
+t_stats <- results_final$par / std_errors
 p_values <- 2 * pnorm(-abs(t_stats))  # Wald test
 round(p_values,5)
 data.frame(
-  Estimate = results_optimized_baseline$par,
+  Estimate = results_final$par,
   SE = std_errors,
   t = round(t_stats,5),
   p_value = round(p_values,5),
-  CI_lower = results_optimized_baseline$par - 1.96 * std_errors,
-  CI_upper = results_optimized_baseline$par + 1.96 * std_errors
+  CI_lower = results_final$par - 1.96 * std_errors,
+  CI_upper = results_final$par + 1.96 * std_errors
 )
 
-AIC_optimized_baseline <- 2 * results_optimized_baseline$value + 2 * 4
-print(AIC_optimized_baseline)
-eigen(results_optimized_baseline$hessian)$values
-
-full_results <- KFfit(
-  param = results_optimized_baseline$par,
-  data = Y,
-  cov_info = cov_info_df,
-  m = m,
-  fit = TRUE,
-  se.fit = TRUE,
-  se.predict = TRUE,
-  optim = FALSE,
-  history.means = TRUE,
-  history.vars = TRUE
-)
+AIC_final_model <- 2 * results_final$value + 2 * 5
+print(AIC_final_model)
+eigen(results_final$hessian)$values
 
 
-# Individual Team Strength plotting
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Plotting_Function.R")
-Team_Strength_Plot(team_indices[['Cork']],full_results,cov_info_df)
-Team_Strength_Plot(team_indices[['Limerick']],full_results,cov_info_df)
-Team_Strength_Plot(team_indices[['Tipperary']],full_results,cov_info_df)
-
-
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Comparison.R")
-team_names_for_comparison <- c("Cork", "Limerick","Tipperary") 
-Strength_Comparison_chart(team_names_for_comparison,full_results)
+# full_results <- KFfit(
+#   param = results_optimized_baseline$par,
+#   data = Y,
+#   cov_info = cov_info_df,
+#   m = m,
+#   fit = TRUE,
+#   se.fit = TRUE,
+#   se.predict = TRUE,
+#   optim = FALSE,
+#   history.means = TRUE,
+#   history.vars = TRUE
+# )
+# 
+# 
+# # Individual Team Strength plotting
+# source("Plotting_Function.R")
+# Team_Strength_Plot(team_indices[['Cork']],full_results,cov_info_df)
+# Team_Strength_Plot(team_indices[['Limerick']],full_results,cov_info_df)
+# Team_Strength_Plot(team_indices[['Tipperary']],full_results,cov_info_df)
+# 
+# source("Strength_Comparison_chart.R")
+# team_names_for_comparison <- c("Cork", "Limerick","Tipperary") 
+# Strength_Comparison_chart(team_names_for_comparison,full_results)
 
 #--------------------------------------------------------------------------
 
@@ -149,42 +151,42 @@ Strength_Comparison_chart(team_names_for_comparison,full_results)
 # rt_lookup_table<- matrix(cbind(seq(0,m-1),0,0,0),nrow = m , ncol = 4 )
 # colnames(rt_lookup_table) <- c("team_id" , "rt_1" , "rt_2" , "rt_3")
 # rt_lookup_table
-source("KF_fit_version_3.R")
-source("KF_parest_version_2.R")
-init = c(0,2,0,2.5)
-results <- KFparest(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
-results
-active_hessian <- results$hessian
-active_hessian
-inv_active_hessian <- solve(active_hessian)
-inv_active_hessian
-std_errors <- sqrt(diag(inv_active_hessian)) 
-print(std_errors)
-print("Confidence Interval of the estimates :")
-for (i in 1:4){
-  print(paste(results$par[i] , " : " , (results$par[i] - (1.96 * inv_active_hessian[i,i])) ,  " to " , (results$par[i] + (1.96 * inv_active_hessian[i,i]))))
-}
-
-#--------------------------------------------------------------
-# Test on Momentum Influence without any parameter interpretation - Version 1.3 
-results$value # 9661.87
-results$par
-source("KF_fit_version_3.R")
-source("KF_parest_version_2.R")
-source("KF_advance_version_2.R")
-init = results$par
-results <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
-results
-active_hessian <- results$hessian
-active_hessian
-inv_active_hessian <- solve(active_hessian)
-inv_active_hessian
-std_errors <- sqrt(diag(inv_active_hessian)) 
-print(std_errors)
-print("Confidence Interval of the estimates :")
-for (i in 1:4){
-  print(paste(results$par[i] , " : " , (results$par[i] - (1.96 * inv_active_hessian[i,i])) ,  " to " , (results$par[i] + (1.96 * inv_active_hessian[i,i]))))
-}
+# source("KF_fit_version_3.R")
+# source("KF_parest_version_2.R")
+# init = c(0,2,0,2.5)
+# results <- KFparest(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
+# results
+# active_hessian <- results$hessian
+# active_hessian
+# inv_active_hessian <- solve(active_hessian)
+# inv_active_hessian
+# std_errors <- sqrt(diag(inv_active_hessian)) 
+# print(std_errors)
+# print("Confidence Interval of the estimates :")
+# for (i in 1:4){
+#   print(paste(results$par[i] , " : " , (results$par[i] - (1.96 * inv_active_hessian[i,i])) ,  " to " , (results$par[i] + (1.96 * inv_active_hessian[i,i]))))
+# }
+# 
+# #--------------------------------------------------------------
+# # Test on Momentum Influence without any parameter interpretation - Version 1.3 
+# results$value # 9661.87
+# results$par
+# source("KF_fit_version_3.R")
+# source("KF_parest_version_2.R")
+# source("KF_advance_version_2.R")
+# init = results$par
+# results <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
+# results
+# active_hessian <- results$hessian
+# active_hessian
+# inv_active_hessian <- solve(active_hessian)
+# inv_active_hessian
+# std_errors <- sqrt(diag(inv_active_hessian)) 
+# print(std_errors)
+# print("Confidence Interval of the estimates :")
+# for (i in 1:4){
+#   print(paste(results$par[i] , " : " , (results$par[i] - (1.96 * inv_active_hessian[i,i])) ,  " to " , (results$par[i] + (1.96 * inv_active_hessian[i,i]))))
+# }
 
 
 # Test of Momentum influence with parameter monitoring the 
@@ -193,20 +195,33 @@ for (i in 1:4){
 source("KF_fit_version_3.R")
 source("KF_parest_version_2.R")
 source("KF_advance_version_2.R")
-init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
+init = c(results_optimized_baseline$par , 0)
 results <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
 results
-active_hessian <- results$hessian
-active_hessian
-inv_active_hessian <- solve(active_hessian)
-inv_active_hessian
-std_errors <- sqrt(diag(inv_active_hessian)) 
-print(std_errors)
-print("Confidence Interval of the estimates :")
-for (i in 1:5){
-  print(paste(results$par[i] , " : " , (results$par[i] - (1.96 * inv_active_hessian[i,i])) ,  " to " , (results$par[i] + (1.96 * inv_active_hessian[i,i]))))
-}
+round(results$hessian,5)
+inv_hessian_results <- solve(results$hessian)
+inv_hessian_results
+eigen(solve(results$hessian))
+# print("Confidence Interval of the estimates :")
+# for (i in 1:4){
+#   print(paste(results_optimized_baseline$par[i] , " : " , (results_optimized_baseline$par[i] - (1.96 * inv_hessian_results[i,i])) ,  " to " , (results_optimized_baseline$par[i] + (1.96 * inv_hessian_results[i,i]))))
+# }
+std_errors <- sqrt(diag(inv_hessian_results))
+t_stats <- results$par / std_errors
+p_values <- 2 * pnorm(-abs(t_stats))  # Wald test
+round(p_values,5)
+data.frame(
+  Estimate = results$par,
+  SE = std_errors,
+  t = round(t_stats,5),
+  p_value = round(p_values,5),
+  CI_lower = results$par - 1.96 * std_errors,
+  CI_upper = results$par + 1.96 * std_errors
+)
 
+AIC_momentum_model <- 2 * results$value + 2 * 5
+print(AIC_momentum_model)
+eigen(results)$values
 
 
 # introducing delta_t into the model which is the time period taken between the games 
@@ -215,21 +230,38 @@ cov_info_df$time_period <- c(0,round(diff(df$Date , units = "days"),2)) # to be 
 source("KF_fit_version_4.R")
 source("KF_parest_version_2.R")
 source("KF_advance_version_2.R")
-init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
-results <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
-results
-active_hessian <- results$hessian
-active_hessian
-inv_active_hessian <- solve(active_hessian)
-inv_active_hessian
-std_errors <- sqrt(diag(inv_active_hessian)) 
-print(std_errors)
-print("Confidence Interval of the estimates :")
-for (i in 1:5){
-  print(paste(results$par[i] , " : " , (results$par[i] - (1.96 * inv_active_hessian[i,i])) ,  " to " , (results$par[i] + (1.96 * inv_active_hessian[i,i]))))
-}
+init = results$par
+# init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
+results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
+results_final
+round(results_final$hessian,5)
+inv_hessian_results <- solve(results_final$hessian)
+inv_hessian_results
+eigen(solve(results_final$hessian))
+# print("Confidence Interval of the estimates :")
+# for (i in 1:4){
+#   print(paste(results_optimized_baseline$par[i] , " : " , (results_optimized_baseline$par[i] - (1.96 * inv_hessian_results[i,i])) ,  " to " , (results_optimized_baseline$par[i] + (1.96 * inv_hessian_results[i,i]))))
+# }
+std_errors <- sqrt(diag(inv_hessian_results))
+t_stats <- results_final$par / std_errors
+p_values <- 2 * pnorm(-abs(t_stats))  # Wald test
+round(p_values,5)
+data.frame(
+  Estimate = results_final$par,
+  SE = std_errors,
+  t = round(t_stats,5),
+  p_value = round(p_values,5),
+  CI_lower = results_final$par - 1.96 * std_errors,
+  CI_upper = results_final$par + 1.96 * std_errors
+)
+
+AIC_final_model <- 2 * results_final$value + 2 * 5
+print(AIC_final_model)
+eigen(results_final$hessian)$values
+
+#========================================================
 full_results <- KFfit_updated(
-  param = results$par,
+  param = results_final$par,
   data = Y,
   cov_info = cov_info_df,
   m = m,
@@ -242,34 +274,22 @@ full_results <- KFfit_updated(
 )
 print("Team Strength at the end of 2024 season : ")
 cbind(names(team_indices),(full_results$mean))
-full_results$var
-cov_matrix <- solve(results$hessian)
-std_errors <- sqrt(diag(cov_matrix))
-t_stats <- results$par / std_errors
-p_values <- 2 * pnorm(-abs(t_stats))  # Wald test
-round(p_values,5)
-data.frame(
-  Estimate = results$par,
-  SE = std_errors,
-  t = t_stats,
-  p_value = p_values,
-  CI_lower = results$par - 1.96 * std_errors,
-  CI_upper = results$par + 1.96 * std_errors
-)
+
+
+source("Strength_Comparison_chart.R")
+team_names_for_comparison <- c("Cork",  "Tipperary","Limerick") 
+Strength_Comparison_chart(team_names_for_comparison,full_results)
+
 residuals <- Y - t(full_results$fit)
 qqnorm(residuals)
-qqline(residuals)
+qqline(residuals,col = "red")
 shapiro.test(residuals)
-plot(t(full_results$fit), residuals, xlab = "Fitted values", ylab = "Residuals")
+plot(t(full_results$fit), residuals, xlab = "Fitted values", 
+     ylab = "Residuals",main = "Residuals vs Fitted Values")
 abline(h = 0, col = "red")
 acf(residuals)
 pacf(residuals)
-AIC <- 2 * results$value + 2 * 5
-eigen(results$hessian)$values
 
-source("Strength_Comparison_chart.R")
-team_names_for_comparison <- c("Cork", "Limerick", "Galway","Kilkenny","Dublin") 
-Strength_Comparison_chart(team_names_for_comparison)
 
 
 #===================TEST DATA=============================================
