@@ -192,9 +192,9 @@ eigen(results_final$hessian)$values
 # Test of Momentum influence with parameter monitoring the 
 # weight of the momentum additive value in the observation equation - Version 1.4
 
-source("KF_fit_version_3.R")
-source("KF_parest_version_2.R")
-source("KF_advance_version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_fit_version_3.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_parest_version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_advance_version_2.R")
 init = c(results_optimized_baseline$par , 0)
 results <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
 results
@@ -227,9 +227,9 @@ eigen(results)$values
 # introducing delta_t into the model which is the time period taken between the games 
 
 cov_info_df$time_period <- c(0,round(diff(df$Date , units = "days"),2)) # to be considered as "days" 
-source("KF_fit_version_4.R")
-source("KF_parest_version_2.R")
-source("KF_advance_version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_fit_version_4.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_parest_version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_advance_version_2.R")
 init = results$par
 # init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
 results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
@@ -276,7 +276,7 @@ print("Team Strength at the end of 2024 season : ")
 cbind(names(team_indices),(full_results$mean))
 
 
-source("Strength_Comparison_chart.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Strength_Comparison_chart.R")
 team_names_for_comparison <- c("Cork",  "Tipperary","Limerick") 
 Strength_Comparison_chart(team_names_for_comparison,full_results)
 
