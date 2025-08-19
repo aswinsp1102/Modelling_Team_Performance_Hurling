@@ -211,7 +211,7 @@ for (i in 1:5){
 
 # introducing delta_t into the model which is the time period taken between the games 
 
-cov_info_df$time_period <- c(0,round(diff(df$Date , units = "weeks"),2)) # to be considered as "days" or "weeks" ???
+cov_info_df$time_period <- c(0,round(diff(df$Date , units = "days"),2)) # to be considered as "days" 
 source("KF_fit_version_4.R")
 source("KF_parest_version_2.R")
 source("KF_advance_version_2.R")
@@ -271,6 +271,8 @@ source("Strength_Comparison_chart.R")
 team_names_for_comparison <- c("Cork", "Limerick", "Galway","Kilkenny","Dublin") 
 Strength_Comparison_chart(team_names_for_comparison)
 
+
+#===================TEST DATA=============================================
 
 test_df <- as.data.frame(read.csv("https://raw.githubusercontent.com/aswinsp1102/DataAnalyticsDatasets/refs/heads/main/Hurling_Test_Data.csv"))
 test_df

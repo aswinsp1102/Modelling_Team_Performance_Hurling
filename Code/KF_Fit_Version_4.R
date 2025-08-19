@@ -137,9 +137,9 @@ KFfit_updated <- function(  param,              # model parameters
     momentum_lookup[cov_info$j_value[t] , 3] <- momentum_lookup[cov_info$j_value[t] , 2]
     momentum_lookup[cov_info$j_value[t] , 2] <- momentum_j
     
-    # if(t==100){
-    # browser()
-    # }
+    if(t==100){
+    browser()
+    }
     
     loglik <- loglik + new$mlik
     

@@ -29,10 +29,11 @@ kfadvance_udpated <- function (obs, oldmean, oldvar, A, B, C, D, E, F,P, W, V, m
   K <- thing1 %*% tD + F %*% V %*% t(F)
   margmean <- D %*% T + E + P
   resid <- obs - margmean
+
   
   # This bit is capturing the momentum information
   
-  expect_i <- pnorm(0,margmean , K , lower.tail = FALSE)
+  expect_i <- pnorm(0,margmean , sqrt(as.numeric(K)) , lower.tail = FALSE)
   # expect_j <- 1 - expect_i
   obs_value <- ifelse(obs == 0 , 0.5 , ifelse(obs > 0 , 1 , 0))
   momentum_i <- (obs_value - expect_i) / expect_i
