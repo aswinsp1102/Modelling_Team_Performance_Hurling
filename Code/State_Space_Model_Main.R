@@ -274,13 +274,20 @@ full_results <- KFfit_updated(
   optim = FALSE
 )
 print("Team Strength at the end of 2024 season : ")
-cbind(names(team_indices),(full_results$mean))
+team_strength_final <- data.frame(cbind(names(team_indices),
+                                        (full_results$mean)))
+colnames(team_strength_final) <- c("Team","Strength")
+team_strength_final$Strength <- as.numeric(team_strength_final$Strength)
 
+sorted_team_strength <- team_strength_final[order(-team_strength_final$Strength), ]
 
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Strength_Comparison_chart.R")
+# Print the sorted table
+print(sorted_team_strength, row.names = FALSE)
+
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Comparison.R")
 team_names_for_comparison <- c("Cork",  "Tipperary","Limerick") 
 Strength_Comparison_chart(team_names_for_comparison,full_results)
-
+Strength_Comparison_chart("Cork",full_results)
 residuals <- Y - t(full_results$fit)
 qqnorm(residuals)
 qqline(residuals,col = "red")
