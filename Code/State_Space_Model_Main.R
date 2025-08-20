@@ -227,9 +227,9 @@ eigen(results)$values
 # introducing delta_t into the model which is the time period taken between the games 
 
 cov_info_df$time_period <- c(0,round(diff(df$Date , units = "days"),2)) # to be considered as "days" 
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_fit_version_4.R")
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_parest_version_2.R")
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_advance_version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Fit_Version_4.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Parest_Version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Advance_Version_2.R")
 init = results$par
 # init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
 results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
