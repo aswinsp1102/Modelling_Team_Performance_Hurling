@@ -261,7 +261,8 @@ eigen(results_final$hessian)$values
 
 #========================================================
 full_results <- KFfit_updated(
-  param = results_final$par,
+  # param = results_final$par,
+  param = c(12.525026,-4.395957,1.294580,2.012788,-1.245186),
   data = Y,
   cov_info = cov_info_df,
   m = m,
