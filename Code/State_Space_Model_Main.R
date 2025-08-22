@@ -287,7 +287,11 @@ print(sorted_team_strength, row.names = FALSE)
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Comparison.R")
 team_names_for_comparison <- c("Cork",  "Tipperary","Limerick") 
 Strength_Comparison_chart(team_names_for_comparison,full_results)
+Strength_Comparison_chart("Kilkenny",full_results)
+Strength_Comparison_chart("Limerick",full_results)
 Strength_Comparison_chart("Cork",full_results)
+Strength_Comparison_chart("Dublin",full_results)
+Strength_Comparison_chart("Offaly",full_results)
 residuals <- Y - t(full_results$fit)
 qqnorm(residuals)
 qqline(residuals,col = "red")
@@ -298,8 +302,34 @@ abline(h = 0, col = "red")
 acf(residuals)
 pacf(residuals)
 
+install.packages("sf")
+library(sf)
 
-
+ireland_counties = st_read("C:/Users/aswin/Downloads/gadm41_IRL_shp/gadm41_IRL_1.shp")
+# ireland$strength = mns[match(ireland$NAME_TAG,counties),2900]
+# plot(ireland["strength"])
+table(ireland_counties$NAME_1)
+ireland_counties$NAME_1 <- ifelse((ireland_counties$NAME_1 == 'NA'), "Cork", ireland_counties$NAME_1)
+final_strength = as.data.frame(cbind(t(full_results$history.means)[2725,],names(team_indices)))
+colnames(final_strength) <- c("Strength","Team")
+ireland_counties <- ireland_counties %>%
+  left_join(final_strength, by = c("NAME_1" = "Team"))
+strength_range <- range(as.numeric(ireland_counties$Strength))
+breaks <- seq(strength_range[1], strength_range[2], length.out = 10)
+ireland_counties <- ireland_counties %>%
+  mutate(Strength_Category = cut(as.numeric(Strength),
+                                 breaks = breaks,
+                                 labels = c("Extremely Weak", "Very Weak", "Weak",
+                                            "Moderately Weak", "Neutral",
+                                            "Moderately Strong", "Strong",
+                                            "Very Strong", "Extremely Strong"),
+                                 include.lowest = TRUE))
+plot(ireland_counties["Strength_Category"],
+     main = "Team Strength by County in Ireland",
+     key.pos = 4,
+     axes = TRUE,
+     breaks = "equal", 
+     nbreaks = 10)    
 #===================TEST DATA=============================================
 
 test_df <- as.data.frame(read.csv("https://raw.githubusercontent.com/aswinsp1102/DataAnalyticsDatasets/refs/heads/main/Hurling_Test_Data.csv"))
