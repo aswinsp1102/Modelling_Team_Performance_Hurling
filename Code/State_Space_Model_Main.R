@@ -326,7 +326,11 @@ year_lookup <- data.frame(
 
 print(year_lookup)
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Season_Map.R")
-Team_Strength_Season_Map(year_lookup$End_Row[which(year_lookup$Year == 2021)],full_results)
+Team_Strength_Season_Map(2012,full_results)
+Team_Strength_Season_Map(2015,full_results)
+Team_Strength_Season_Map(2018,full_results)
+Team_Strength_Season_Map(2021,full_results)
+Team_Strength_Season_Map(2024,full_results)
 
 
 #===================TEST DATA=============================================
