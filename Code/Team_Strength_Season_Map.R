@@ -1,4 +1,5 @@
-Team_Strength_Season_Map <- function(year_row , full_results){
+Team_Strength_Season_Map <- function(year , full_results){
+  year_row = year_lookup$End_Row[which(year_lookup$Year == year)]
   ireland_counties = st_read("C:/Users/aswin/Downloads/gadm41_IRL_shp/gadm41_IRL_1.shp")
   table(ireland_counties$NAME_1)
   ireland_counties$NAME_1 <- ifelse((ireland_counties$NAME_1 == 'NA'), "Cork", ireland_counties$NAME_1)
@@ -17,7 +18,7 @@ Team_Strength_Season_Map <- function(year_row , full_results){
                                               "Very Strong", "Extremely Strong"),
                                    include.lowest = TRUE))
   plot(ireland_counties["Strength_Category"],
-       main = "Team Strength by County in Ireland",
+       main = paste("Team Strength at the end of ",year, " season"),
        key.pos = 4,
        axes = TRUE,
        breaks = "equal", 
