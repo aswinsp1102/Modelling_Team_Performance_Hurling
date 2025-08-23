@@ -187,7 +187,7 @@ KFfit_updated <- function(  param,              # model parameters
     return(-loglik) # just return the -log likelihood if in parameter estimation mode
   }
   else{
-    retlist <- list(mean=Xpost,var=Vpost,mlik=loglik,data=data,running.mean=running.mean,running.var=running.var,ape.results = ape_results,y_hat = y_hat)
+    retlist <- list(mean=Xpost,var=Vpost,mlik=loglik,data=data,running.mean=running.mean,running.var=running.var,ape.results = ape_results,y.hat = y_hat)
     if(history.means){
       retlist$history.means <- Xrec
     }
