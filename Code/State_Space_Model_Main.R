@@ -230,8 +230,8 @@ cov_info_df$time_period <- c(0,round(diff(df$Date , units = "days"),2)) # to be 
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Fit_Version_4.R")
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Parest_Version_2.R")
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Advance_Version_2.R")
-init = results$par
-# init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
+# init = results$par
+init = c(11.773572, -1.729861 , 1.304171  , 2.007035,-1.314913)
 results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
 results_final
 round(results_final$hessian,5)
