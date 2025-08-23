@@ -304,32 +304,29 @@ pacf(residuals)
 
 install.packages("sf")
 library(sf)
+# base_url <- "https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/main/Data/gadm41_IRL_1"
+# extensions <- c(".shp", ".shx", ".dbf", ".prj", ".cpg")
+# temp_dir <- tempfile()
+# dir.create(temp_dir)
+# for (ext in extensions) {
+#   file_url <- paste0(base_url, ext)
+#   local_file <- file.path(temp_dir, paste0("gadm41_IRL_1", ext))
+# }  
+# shp_file <- file.path(temp_dir, "gadm41_IRL_1.shp")
+# ireland_counties = st_read(shp_file)
 
-ireland_counties = st_read("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Data/gadm41_IRL_1.shp")
-# ireland$strength = mns[match(ireland$NAME_TAG,counties),2900]
-# plot(ireland["strength"])
-table(ireland_counties$NAME_1)
-ireland_counties$NAME_1 <- ifelse((ireland_counties$NAME_1 == 'NA'), "Cork", ireland_counties$NAME_1)
-final_strength = as.data.frame(cbind(t(full_results$history.means)[2725,],names(team_indices)))
-colnames(final_strength) <- c("Strength","Team")
-ireland_counties <- ireland_counties %>%
-  left_join(final_strength, by = c("NAME_1" = "Team"))
-strength_range <- range(as.numeric(ireland_counties$Strength))
-breaks <- seq(strength_range[1], strength_range[2], length.out = 10)
-ireland_counties <- ireland_counties %>%
-  mutate(Strength_Category = cut(as.numeric(Strength),
-                                 breaks = breaks,
-                                 labels = c("Extremely Weak", "Very Weak", "Weak",
-                                            "Moderately Weak", "Neutral",
-                                            "Moderately Strong", "Strong",
-                                            "Very Strong", "Extremely Strong"),
-                                 include.lowest = TRUE))
-plot(ireland_counties["Strength_Category"],
-     main = "Team Strength by County in Ireland",
-     key.pos = 4,
-     axes = TRUE,
-     breaks = "equal", 
-     nbreaks = 10)    
+year_changes <- which(diff(as.numeric(df$Year)) != 0)
+
+year_end_rows <- c(year_changes, nrow(df))
+
+year_lookup <- data.frame(
+  Year = unique(df$Year),
+  End_Row = year_end_rows
+)
+
+print(year_lookup)
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/Team_Strength_Season_Map.R")
+Team_Strength_Season_Map(year_lookup$End_Row[which(year_lookup$Year == 2023)],full_results)
 #===================TEST DATA=============================================
 
 test_df <- as.data.frame(read.csv("https://raw.githubusercontent.com/aswinsp1102/DataAnalyticsDatasets/refs/heads/main/Hurling_Test_Data.csv"))
