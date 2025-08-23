@@ -77,7 +77,8 @@ KFfit_updated <- function(  param,              # model parameters
     pb <- txtProgressBar(min=1,max=T,style=3)
   }
   
-  
+  y_hat <- numeric(T)
+  ape_results <- numeric(T)
   for(t in 1:T){
     
     D <- matrix(0, nrow = 1, ncol = m)
@@ -141,6 +142,13 @@ KFfit_updated <- function(  param,              # model parameters
     # browser()
     # }
     
+    # This bit calculates the predicted values
+    if (!optim){
+      y_hat[t] <- D %*% Xpost + E + M
+    }
+    
+    ape_results[t] <- abs(data[t,] - y_hat[t]) / y_hat[t] 
+    
     loglik <- loglik + new$mlik
     
     
@@ -179,7 +187,7 @@ KFfit_updated <- function(  param,              # model parameters
     return(-loglik) # just return the -log likelihood if in parameter estimation mode
   }
   else{
-    retlist <- list(mean=Xpost,var=Vpost,mlik=loglik,data=data,running.mean=running.mean,running.var=running.var)
+    retlist <- list(mean=Xpost,var=Vpost,mlik=loglik,data=data,running.mean=running.mean,running.var=running.var,ape.results = ape_results)
     if(history.means){
       retlist$history.means <- Xrec
     }

@@ -192,9 +192,9 @@ eigen(results_final$hessian)$values
 # Test of Momentum influence with parameter monitoring the 
 # weight of the momentum additive value in the observation equation - Version 1.4
 
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_fit_version_3.R")
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_parest_version_2.R")
-source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_advance_version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Fit_Version_3.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Parest_Version_2.R")
+source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Advance_Version_2.R")
 init = c(results_optimized_baseline$par , 0)
 results <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
 results
@@ -231,7 +231,7 @@ source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Parest_Version_2.R")
 source("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Code/KF_Advance_Version_2.R")
 # init = results$par
-init = c(11.773572, -1.729861 , 1.304171  , 2.007035,-1.314913)
+init = c(11.701304, -1.771713 , 1.282420  , 2.010619,-1.314913)
 results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
 results_final
 round(results_final$hessian,5)
@@ -254,7 +254,7 @@ data.frame(
   CI_lower = results_final$par - 1.96 * std_errors,
   CI_upper = results_final$par + 1.96 * std_errors
 )
-
+std_errors
 AIC_final_model <- 2 * results_final$value + 2 * 5
 print(AIC_final_model)
 eigen(results_final$hessian)$values
