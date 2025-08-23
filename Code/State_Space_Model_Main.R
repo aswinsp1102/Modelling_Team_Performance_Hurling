@@ -305,7 +305,7 @@ pacf(residuals)
 install.packages("sf")
 library(sf)
 
-ireland_counties = st_read("C:/Users/aswin/Downloads/gadm41_IRL_shp/gadm41_IRL_1.shp")
+ireland_counties = st_read("https://raw.githubusercontent.com/aswinsp1102/Modelling_Team_Performance_Hurling/refs/heads/main/Data/gadm41_IRL_1.shp")
 # ireland$strength = mns[match(ireland$NAME_TAG,counties),2900]
 # plot(ireland["strength"])
 table(ireland_counties$NAME_1)
