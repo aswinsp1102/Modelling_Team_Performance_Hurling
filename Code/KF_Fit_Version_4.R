@@ -147,7 +147,7 @@ KFfit_updated <- function(  param,              # model parameters
       y_hat[t] <- D %*% Xpost + E + M
     }
     
-    ape_results[t] <- abs(data[t,] - y_hat[t]) / y_hat[t] 
+    ape_results[t] <- abs((data[t,] - y_hat[t]) / y_hat[t] )
     
     loglik <- loglik + new$mlik
     
