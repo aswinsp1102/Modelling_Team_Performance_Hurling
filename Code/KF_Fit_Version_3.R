@@ -87,7 +87,6 @@ KFfit_updated <- function(  param,              # model parameters
     
     F <-  matrix(1, nrow=1, ncol=1) # this too?
     
-    if(t == 100) {browser()}
     
     # Calculating the summarized momentum value of i and j to be sent to the KF advance function
     M <- matrix(0,1,1)

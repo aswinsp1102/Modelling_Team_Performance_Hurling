@@ -73,34 +73,34 @@ eigen(results_baseline$hessian)$values
 #----------------------------------------------------------------------------
 
 # Run 2: Optimized initial values
-init = results$par
+init = results_baseline$par
 # init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
-results_final <- KFparest_updated(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
-results_final
-round(results_final$hessian,5)
-inv_hessian_results <- solve(results_final$hessian)
+results_optimized_baseline <- KFparest(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
+results_optimized_baseline
+round(results_optimized_baseline$hessian,5)
+inv_hessian_results <- solve(results_optimized_baseline$hessian)
 inv_hessian_results
-eigen(solve(results_final$hessian))
+eigen(solve(results_optimized_baseline$hessian))
 # print("Confidence Interval of the estimates :")
 # for (i in 1:4){
 #   print(paste(results_optimized_baseline$par[i] , " : " , (results_optimized_baseline$par[i] - (1.96 * inv_hessian_results[i,i])) ,  " to " , (results_optimized_baseline$par[i] + (1.96 * inv_hessian_results[i,i]))))
 # }
 std_errors <- sqrt(diag(inv_hessian_results))
-t_stats <- results_final$par / std_errors
+t_stats <- results_optimized_baseline$par / std_errors
 p_values <- 2 * pnorm(-abs(t_stats))  # Wald test
 round(p_values,5)
 data.frame(
-  Estimate = results_final$par,
+  Estimate = results_optimized_baseline$par,
   SE = std_errors,
   t = round(t_stats,5),
   p_value = round(p_values,5),
-  CI_lower = results_final$par - 1.96 * std_errors,
-  CI_upper = results_final$par + 1.96 * std_errors
+  CI_lower = results_optimized_baseline$par - 1.96 * std_errors,
+  CI_upper = results_optimized_baseline$par + 1.96 * std_errors
 )
 
-AIC_final_model <- 2 * results_final$value + 2 * 5
-print(AIC_final_model)
-eigen(results_final$hessian)$values
+AIC_optimized_baseline <- 2 * results_optimized_baseline$value + 2 * 5
+print(AIC_optimized_baseline)
+eigen(results_optimized_baseline$hessian)$values
 
 
 # full_results <- KFfit(
