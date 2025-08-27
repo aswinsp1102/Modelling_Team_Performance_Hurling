@@ -85,7 +85,7 @@ KFfit_updated <- function(  param,              # model parameters
     D[1, cov_info$i_value[t]] <- 1
     D[1, cov_info$j_value[t]] <- -1
     
-    C <- diag(cov_info$time_period[t],nrow = m)
+    C <- diag(sqrt(cov_info$time_period[t]),nrow = m)
     
     # E <- matrix(0, nrow = m, ncol = 1)
     # E[cov_info$i_value[t], 1] <- ifelse(cov_info$h_value[t] == 1, h, 0)

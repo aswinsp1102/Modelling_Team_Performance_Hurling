@@ -73,7 +73,7 @@ eigen(results_baseline$hessian)$values
 #----------------------------------------------------------------------------
 
 # Run 2: Optimized initial values
-init = results_baseline$par
+init = c(0,2,0,2.5)
 # init = c(11.773572, -1.729861 , 1.304171  , 2.007035,0)
 results_optimized_baseline <- KFparest(data = Y , m = m ,cov_info =  cov_info_df, initial_values = init)
 results_optimized_baseline
