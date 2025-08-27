@@ -258,11 +258,12 @@ std_errors
 AIC_final_model <- 2 * results_final$value + 2 * 5
 print(AIC_final_model)
 eigen(results_final$hessian)$values
-
+results_final$par
+# 11.943147 -2.135496  1.290360  2.007949 -1.351489
 #========================================================
 full_results <- KFfit_updated(
   # param = results_final$par,
-  param = c(12.525026,-4.395957,1.294580,2.012788,-1.245186),
+  param = results_final$par,
   data = Y,
   cov_info = cov_info_df,
   m = m,
@@ -275,8 +276,8 @@ full_results <- KFfit_updated(
 )
 print("Team Strength at the end of 2024 season : ")
 team_strength_final <- data.frame(cbind(names(team_indices),
-                                        (full_results$mean)))
-colnames(team_strength_final) <- c("Team","Strength")
+                                        (full_results$mean),sqrt(diag(full_results$var))))
+colnames(team_strength_final) <- c("Team","Strength","Standard Errors")
 team_strength_final$Strength <- as.numeric(team_strength_final$Strength)
 
 sorted_team_strength <- team_strength_final[order(-team_strength_final$Strength), ]

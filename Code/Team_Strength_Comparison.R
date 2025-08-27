@@ -2,6 +2,7 @@
 
 library(tidyr)
 library(dplyr)
+
 # Function to plot the comparative team strength 
 
 Strength_Comparison_chart <- function (team_names,full_results)
