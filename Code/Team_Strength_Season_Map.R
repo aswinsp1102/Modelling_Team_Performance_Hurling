@@ -17,10 +17,12 @@ Team_Strength_Season_Map <- function(year , full_results){
                                               "Moderately Strong", "Strong",
                                               "Very Strong", "Extremely Strong"),
                                    include.lowest = TRUE))
+  color_palette <- colorRampPalette(c("blue", "white", "red"))(9)
   plot(ireland_counties["Strength_Category"],
        main = paste("Team Strength at the end of ",year, " season"),
        key.pos = 4,
        axes = TRUE,
+       pal = color_palette,
        breaks = "equal", 
        nbreaks = 10)    
 }
