@@ -60,6 +60,12 @@ print(home_counts)
 pct <- round(home_counts / sum(home_counts) * 100)
 library(RColorBrewer)
 
+filter_df <- df %>%
+  filter(as.numeric(df$Sc_1) != as.numeric(df$Sc_2))
+
+filter_df$team_1_wins  <- ifelse(as.numeric(filter_df$Sc_1) > as.numeric(filter_df$Sc_2), "Y", "N")
+
+table(Team1_Wins = filter_df$team_1_wins, Home = filter_df$Home)
 home_matches <- df %>%
   filter(Home == 'Y') %>% 
   count(Year, Home = Team.1, name = "Home_Matches") %>%

@@ -296,10 +296,31 @@ Strength_Comparison_chart("Offaly",full_results)
 residuals <- Y - t(full_results$fit)
 qqnorm(residuals)
 qqline(residuals,col = "red")
+library(ggplot2)
+install.packages("qqplotr")
+library(qqplotr)
+
+residuals <- Y - t(full_results$fit)
+
+plot_data <- data.frame(Residuals = residuals)
+
+ggplot(data = plot_data, mapping = aes(sample = Residuals)) +
+  stat_qq_band(bandType = "pointwise", # Type of confidence band
+               alpha = 0.7,     # Transparency of the band
+               fill = "cyan") + # Color of the band
+  stat_qq_line(col = "red",     # Color of the Q-Q line
+               linewidth = 0.8) +    # Thickness of the line
+  stat_qq_point(cex=1.1) +             # Add the points
+  labs(title = "Q-Q Plot of Residuals",
+       x = "Theoretical Quantiles",
+       y = "Sample Quantiles") +
+  theme_minimal()
 shapiro.test(residuals)
 plot(t(full_results$fit), residuals, xlab = "Fitted values", 
      ylab = "Residuals",main = "Residuals vs Fitted Values")
-abline(h = 0, col = "red")
+abline(h = 0, col = "red",lty = 2)
+smooth_line <- loess.smooth(t(full_results$fit), residuals)
+lines(smooth_line, col = "blue", lwd = 2,lty = 2) # lwd=2 for a thicker line
 acf(residuals)
 pacf(residuals)
 
@@ -315,7 +336,7 @@ library(sf)
 # }  
 # shp_file <- file.path(temp_dir, "gadm41_IRL_1.shp")
 # ireland_counties = st_read(shp_file)
-
+df$Year <- format(as.Date(df$Date), "%Y")
 year_changes <- which(diff(as.numeric(df$Year)) != 0)
 
 year_end_rows <- c(year_changes, nrow(df))
